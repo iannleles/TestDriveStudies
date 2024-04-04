@@ -21,15 +21,17 @@ namespace API_Estudos.Controllers
         public IActionResult GetAll()
         {
             List<PacienteDTO> pacientesDTO = new List<PacienteDTO>();            
-            var pacientes = _context.Pacientes.Where(x=>x.Excluido == false).ToList();
+            var pacientes = _context.Pacientes.Where(x=>x.Excluido == false).Include(x=>x.Medico).ToList();
             foreach (var item in pacientes)
             {
                 pacientesDTO.Add(new PacienteDTO
                 {
+                    Id = item.Id,
                     DataNascimento = item.DataNascimento,
                     Nome = item.Nome,
                     SobreNome = item.SobreNome,
-                    Telefone = item.Telefone
+                    Telefone = item.Telefone,
+                    MedicoId = item?.Medico?.Id
                 });
             }
 
@@ -44,7 +46,8 @@ namespace API_Estudos.Controllers
                Nome = pacienteDTO.Nome,
                SobreNome = pacienteDTO.SobreNome,
                DataNascimento = pacienteDTO.DataNascimento,
-               Telefone = pacienteDTO.Telefone
+               Telefone = pacienteDTO.Telefone,
+               MedicoId = pacienteDTO.MedicoId,
             };
             paciente.InserirDadosBase();
             _context.Pacientes.Add(paciente);
@@ -65,6 +68,7 @@ namespace API_Estudos.Controllers
             paciente.DataNascimento = pacienteDTO.DataNascimento;
             paciente.Nome = pacienteDTO.Nome;
             paciente.SobreNome = pacienteDTO.SobreNome;
+            paciente.MedicoId = pacienteDTO.MedicoId;
 
             _context.Pacientes.Update(paciente);
             _context.SaveChanges();

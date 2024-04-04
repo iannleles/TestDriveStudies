@@ -19,17 +19,17 @@ namespace API_Estudos.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            List<MedicoDTO> medicosDTO = new List<MedicoDTO>();            
-            var medicos = _context.Medicos.Where(x=>x.Excluido == false).ToList();
+            List<MedicoDTO> medicosDTO = new List<MedicoDTO>();
+            var medicos = _context.Medicos.Where(x => x.Excluido == false).ToList();
             foreach (var item in medicos)
             {
                 medicosDTO.Add(new MedicoDTO
-                {   Id = item.Id,
-                    Nome = item.Nome,                 
-                    CRM = item.CRM,                    
+                {
+                    Id = item.Id,
+                    Nome = item.Nome,
+                    CRM = item.CRM,
                 });
             }
-
             return Ok(medicosDTO);
         }
 
@@ -39,7 +39,8 @@ namespace API_Estudos.Controllers
             var medico = new Medico
             {
                Nome = medicoDTO.Nome,
-               CRM = medicoDTO.CRM              
+               CRM = medicoDTO.CRM,
+               EspecialidadeId = medicoDTO.EspecialidadeId
             };
             medico.InserirDadosBase();
             _context.Medicos.Add(medico);
@@ -58,6 +59,7 @@ namespace API_Estudos.Controllers
             }
             medico.CRM = medicoDTO.CRM;
             medico.Nome = medicoDTO.Nome;
+            medico.EspecialidadeId = medicoDTO.EspecialidadeId;
             _context.Medicos.Update(medico);
             _context.SaveChanges();
             return Ok(medicoDTO);
